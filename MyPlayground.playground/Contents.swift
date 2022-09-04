@@ -19,21 +19,14 @@ struct Parking {
         
         let result = vehicles.insert(vehicle)
         
-        if result.inserted {
-            onFinish(true)
-        } else {
-            onFinish(false)
-        }
+        onFinish(result.inserted)
         
     }
     
     mutating func checkOutVehicle( plate : String , onSuccess : (Int) -> Void , onError : () -> Void ){
         
         let vehicleToCheckOut =  vehicles.first { vehicle in
-            if vehicle.plate == plate {
-                return true
-            }
-            return false
+            vehicle.plate == plate
         }
         
         guard let vehicleToCheckOut = vehicleToCheckOut else {
@@ -44,7 +37,9 @@ struct Parking {
         let fee = calculateFee(type: vehicleToCheckOut.type, parkedTime: vehicleToCheckOut.parkedTime , hasDiscountCard: vehicleToCheckOut.hasDiscountCard )
         
         onSuccess(fee)
+        
         parkingRegister.vehicles += 1
+        parkingRegister.earnings += fee
 
         vehicles.remove(vehicleToCheckOut)
         
@@ -59,17 +54,22 @@ struct Parking {
             let total = (Double(parkedTime - 120) / 15.0 ).rounded(.up)
             fee += Int(total) * 5
         }
-                
-        let discount = hasDiscountCard ? 0.85 : 1
-        
-        parkingRegister.earnings += fee
-
-        return Int( Double(fee) * discount )
+                        
+        return  hasDiscountCard ? Int(Double(fee) * 0.85) : fee
+    }
+    
+    func showStatistics(){
+        print("\(self.parkingRegister.vehicles) vehicles have checked out and have earnings of $\(self.parkingRegister.earnings)")
     }
 
+    func listVehicles() {
+        self.vehicles.forEach { vehicle in
+            print("Vehicle plate is \(vehicle.plate)")
+        }
+    }
 }
 
-struct Vehicle: Parkable {
+struct Vehicle: Parkable , Hashable {
     let plate: String
     let type: VehicleType
     let checkInTime: Date
@@ -81,6 +81,10 @@ struct Vehicle: Parkable {
   static func ==(lhs: Vehicle, rhs: Vehicle) -> Bool {
     lhs.plate == rhs.plate
   }
+    
+    func hash(into hasher: inout Hasher) {
+      hasher.combine(plate)
+    }
     
 }
 
@@ -100,7 +104,7 @@ enum VehicleType {
   }
 }
 
-protocol Parkable: Hashable {
+protocol Parkable {
     var plate: String { get }
     var type: VehicleType { get }
     var discountCard: String? { get }
@@ -112,21 +116,6 @@ protocol Parkable: Hashable {
 
 extension Parkable {
     var hasDiscountCard: Bool { discountCard != nil }
-}
-
-extension Parkable {
-    
-      func hash(into hasher: inout Hasher) {
-        hasher.combine(plate)
-      }
-}
-
-var alert = { insert in
-    insert ? print("Welcome to AlkeParking!") : print("Sorry, the check-in failed")
-}
-
-var alertCheckout : (Int) -> () = {fee in
-    print("Your fee is \(fee). Come back soon")
 }
 
 var alkeParking = Parking()
@@ -191,10 +180,17 @@ nil)
 let vehicles = [ vehicle1 , vehicle2 , vehicle3 , vehicle4 , vehicle5 , vehicle6 , vehicle7 , vehicle8 , vehicle9 , vehicle10 , vehicle11 , vehicle12 , vehicle13 , vehicle14 , vehicle15 ]
 
 vehicles.forEach { vehicle in
-    alkeParking.checkInVehicle(vehicle , onFinish: alert)
+    alkeParking.checkInVehicle(vehicle ) { canInsert in
+        print( canInsert ? "Welcome to AlkeParking!" : "Sorry, the check-in failed")
+    }
 }
 
-alkeParking.checkOutVehicle(plate: vehicle1.plate , onSuccess: alertCheckout , onError: {
-    print("error")
-})
+alkeParking.checkOutVehicle(plate: vehicle1.plate) {fee in
+    print("Your fee is \(fee). Come back soon")
+} onError: {
+    print("Sorry, the check-out failed")
+}
 
+alkeParking.listVehicles()
+
+alkeParking.showStatistics()
