@@ -17,6 +17,8 @@ bus: $30).
 fracción independiente del tipo de vehículo. Por ejemplo para un auto se
 tendrían las siguientes tarifas:
 
+| Ingreso | Salida | Tarifa |
+| ------ | ------ | ------ |
 | 18:00 | 18:46 | $20
 | 18:00 | 20:00 | $20
 | 18:00 | 21:13 | $45
