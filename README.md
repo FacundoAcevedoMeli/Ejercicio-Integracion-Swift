@@ -17,8 +17,8 @@ bus: $30).
 fracción independiente del tipo de vehículo. Por ejemplo para un auto se
 tendrían las siguientes tarifas:
 
-18:00 | 18:46 | $20
-18:00 | 20:00 | $20
-18:00 | 21:13 | $45
-18:00 | 21:18 | $50
-18:00 | 21:30 | $50
+| 18:00 | 18:46 | $20
+| 18:00 | 20:00 | $20
+| 18:00 | 21:13 | $45
+| 18:00 | 21:18 | $50
+| 18:00 | 21:30 | $50
