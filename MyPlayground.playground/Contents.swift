@@ -48,7 +48,7 @@ struct Parking {
     
     mutating func calculateFee(type : VehicleType , parkedTime : Int , hasDiscountCard : Bool ) -> Int {
         
-        var fee = type.tarifa
+        var fee = type.rate
         
         if parkedTime > 120 {
             let total = (Double(parkedTime - 120) / 15.0 ).rounded(.up)
@@ -94,7 +94,7 @@ enum VehicleType {
   case bus
   case motorcycle
   
-  var tarifa: Int {
+  var rate: Int {
     switch self {
     case .car: return 20
     case .motorcycle: return 15
@@ -218,7 +218,7 @@ alkeParking.checkOutVehicle(plate: vehicle1.plate) {fee in
 
 print("Insertar vehiculo repetido")
 
-alkeParking.checkInVehicle(vehicle4, onFinish: { canInsert in
+alkeParking.checkInVehicle(vehicle1, onFinish: { canInsert in
     print( canInsert ? "Welcome to AlkeParking!" : "Sorry, the check-in failed")
 })
 // Listar patentes de los vehiculos
