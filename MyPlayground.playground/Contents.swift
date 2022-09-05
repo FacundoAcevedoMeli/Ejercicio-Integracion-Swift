@@ -2,14 +2,19 @@ import Foundation
 
 struct Parking {
     
-    private var vehicles: Set<Vehicle>
-    private let maxVehicles : Int = 20
+    private var vehicles: Set<Vehicle> = []
+    
+    // Register
+    
     private var parkingRegister : (vehicles : Int,earnings : Int) = (0,0)
     
-    init(){
-        vehicles = []
-    }
+    // Constants
     
+    private let minimumMinutes: Int = 120
+    private let rateMinutes: Double = 15.0
+    private let discount: Double = 0.85
+    private let maxVehicles : Int = 20
+
     mutating func checkInVehicle(_ vehicle : Vehicle , onFinish: (Bool) -> Void){
         
         guard vehicles.count < maxVehicles else {
@@ -50,12 +55,12 @@ struct Parking {
         
         var fee = type.rate
         
-        if parkedTime > 120 {
-            let total = (Double(parkedTime - 120) / 15.0 ).rounded(.up)
+        if parkedTime > minimumMinutes {
+            let total = (Double(parkedTime - minimumMinutes) / rateMinutes ).rounded(.up)
             fee += Int(total) * 5
         }
                         
-        return  hasDiscountCard ? Int(Double(fee) * 0.85) : fee
+        return  hasDiscountCard ? Int(Double(fee) * discount ) : fee
     }
     
     func showStatistics(){
@@ -199,7 +204,7 @@ nil)
 
 let vehicles = [ vehicle1 , vehicle2 , vehicle3 , vehicle4 , vehicle5 , vehicle6 , vehicle7 , vehicle8 , vehicle9 , vehicle10 , vehicle11 , vehicle12 , vehicle13 , vehicle14 , vehicle15 , vehicle16 , vehicle17 , vehicle18 , vehicle19 , vehicle20 ]
 
-// Se ingresan los 20 vehiculos
+// Insert all vehicles
 
 vehicles.forEach { vehicle in
     alkeParking.checkInVehicle(vehicle ) { canInsert in
@@ -208,7 +213,7 @@ vehicles.forEach { vehicle in
 }
 
 
-print("Checkout vehiculo 1")
+print("Checkout vehicle 1")
 
 alkeParking.checkOutVehicle(plate: vehicle1.plate) {fee in
     print("Your fee is \(fee). Come back soon")
@@ -216,15 +221,15 @@ alkeParking.checkOutVehicle(plate: vehicle1.plate) {fee in
     print("Sorry, the check-out failed")
 }
 
-print("Insertar vehiculo repetido")
+print("Insert vehicle 1 again")
 
 alkeParking.checkInVehicle(vehicle1, onFinish: { canInsert in
     print( canInsert ? "Welcome to AlkeParking!" : "Sorry, the check-in failed")
 })
-// Listar patentes de los vehiculos
+// List vehicle  plates
 
 alkeParking.listVehicles()
 
-// Listar ganancias y vehiculos
+// List earnings and vehicles
 
 alkeParking.showStatistics()
