@@ -3,7 +3,7 @@ import Foundation
 struct Parking {
     
     private var vehicles: Set<Vehicle>
-    private let maxVehicles : Int = 5
+    private let maxVehicles : Int = 20
     private var parkingRegister : (vehicles : Int,earnings : Int) = (0,0)
     
     init(){
@@ -177,7 +177,29 @@ let vehicle15 = Vehicle(plate: "CC333FF", type:
 VehicleType.miniBus, checkInTime: Date(), discountCard:
 nil)
 
-let vehicles = [ vehicle1 , vehicle2 , vehicle3 , vehicle4 , vehicle5 , vehicle6 , vehicle7 , vehicle8 , vehicle9 , vehicle10 , vehicle11 , vehicle12 , vehicle13 , vehicle14 , vehicle15 ]
+let vehicle16 = Vehicle(plate: "321SGB", type:
+VehicleType.miniBus, checkInTime: Date(), discountCard:
+nil)
+
+let vehicle17 = Vehicle(plate: "999GGG", type:
+VehicleType.miniBus, checkInTime: Date(), discountCard:
+nil)
+
+let vehicle18 = Vehicle(plate: "109HGH", type:
+VehicleType.miniBus, checkInTime: Date(), discountCard:
+nil)
+
+let vehicle19 = Vehicle(plate: "111LOL", type:
+VehicleType.miniBus, checkInTime: Date(), discountCard:
+nil)
+
+let vehicle20 = Vehicle(plate: "HXD213", type:
+VehicleType.miniBus, checkInTime: Date(), discountCard:
+nil)
+
+let vehicles = [ vehicle1 , vehicle2 , vehicle3 , vehicle4 , vehicle5 , vehicle6 , vehicle7 , vehicle8 , vehicle9 , vehicle10 , vehicle11 , vehicle12 , vehicle13 , vehicle14 , vehicle15 , vehicle16 , vehicle17 , vehicle18 , vehicle19 , vehicle20 ]
+
+// Se ingresan los 20 vehiculos
 
 vehicles.forEach { vehicle in
     alkeParking.checkInVehicle(vehicle ) { canInsert in
@@ -185,12 +207,24 @@ vehicles.forEach { vehicle in
     }
 }
 
+
+print("Checkout vehiculo 1")
+
 alkeParking.checkOutVehicle(plate: vehicle1.plate) {fee in
     print("Your fee is \(fee). Come back soon")
 } onError: {
     print("Sorry, the check-out failed")
 }
 
+print("Insertar vehiculo repetido")
+
+alkeParking.checkInVehicle(vehicle4, onFinish: { canInsert in
+    print( canInsert ? "Welcome to AlkeParking!" : "Sorry, the check-in failed")
+})
+// Listar patentes de los vehiculos
+
 alkeParking.listVehicles()
+
+// Listar ganancias y vehiculos
 
 alkeParking.showStatistics()
