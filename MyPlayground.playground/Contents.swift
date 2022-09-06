@@ -1,6 +1,9 @@
 import Foundation
+import UIKit
+
 
 struct Parking {
+    
     
     private (set) var vehicles: Set<Vehicle> = []
     
@@ -70,8 +73,8 @@ struct Parking {
     }
 
     func listVehicles() {
-        self.vehicles.forEach { vehicle in
-            print("Vehicle plate is \(vehicle.plate)")
+        self.vehicles.enumerated().forEach { index , vehicle in
+            print("\(index) - Vehicle plate is \(vehicle.plate)")
         }
     }
 }
@@ -214,6 +217,11 @@ vehicles.forEach { vehicle in
     }
 }
 
+print("Insert vehicle 1 again")
+
+alkeParking.checkInVehicle(vehicle1, onFinish: { canInsert in
+    print( canInsert ? "Welcome to AlkeParking!" : "Sorry, the check-in failed")
+})
 
 print("Checkout vehicle 1")
 
@@ -223,11 +231,7 @@ alkeParking.checkOutVehicle(plate: vehicle1.plate) {fee in
     print("Sorry, the check-out failed")
 }
 
-print("Insert vehicle 1 again")
 
-alkeParking.checkInVehicle(vehicle1, onFinish: { canInsert in
-    print( canInsert ? "Welcome to AlkeParking!" : "Sorry, the check-in failed")
-})
 // List vehicle  plates
 
 alkeParking.listVehicles()
