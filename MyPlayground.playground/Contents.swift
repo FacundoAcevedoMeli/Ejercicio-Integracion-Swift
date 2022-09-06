@@ -2,7 +2,7 @@ import Foundation
 
 struct Parking {
     
-    private var vehicles: Set<Vehicle> = []
+    private (set) var vehicles: Set<Vehicle> = []
     
     // Register
     
@@ -21,10 +21,8 @@ struct Parking {
             onFinish(false)
             return
         }
-        
-        let result = vehicles.insert(vehicle)
-        
-        onFinish(result.inserted)
+                
+        onFinish(vehicles.insert(vehicle).inserted)
         
     }
     
@@ -60,11 +58,15 @@ struct Parking {
             fee += Int(total) * 5
         }
                         
-        return  hasDiscountCard ? Int(Double(fee) * discount ) : fee
+        return  hasDiscountCard ? applyDisscount(fee: fee) : fee
     }
     
     func showStatistics(){
         print("\(self.parkingRegister.vehicles) vehicles have checked out and have earnings of $\(self.parkingRegister.earnings)")
+    }
+    
+    private func applyDisscount(fee : Int) -> Int {
+        return Int(Double(fee) * discount)
     }
 
     func listVehicles() {
