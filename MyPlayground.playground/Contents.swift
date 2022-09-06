@@ -15,7 +15,7 @@ struct Parking {
     
     private let minimumMinutes: Int = 120
     private let rateMinutes: Double = 15.0
-    private let discount: Double = 0.85
+    private let discount: Double = 15
     private let maxVehicles : Int = 20
 
     mutating func checkInVehicle(_ vehicle : Vehicle , onFinish: (Bool) -> Void){
@@ -69,7 +69,7 @@ struct Parking {
     }
     
     private func applyDisscount(fee : Int) -> Int {
-        return Int(Double(fee) * discount)
+        return Int(Double(fee) * ((100 - discount) / 100) )
     }
 
     func listVehicles() {
